@@ -1268,7 +1268,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener {
         int version;
         String query;
         boolean isSearchOpen;
-        List<Boolean> searchFiltersStates;
+        List<Boolean> searchFiltersStates = new ArrayList<>();
 
         public SavedState(Parcelable superState) {
             super(superState);
