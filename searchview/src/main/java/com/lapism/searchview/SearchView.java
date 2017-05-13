@@ -553,20 +553,24 @@ public class SearchView extends FrameLayout implements View.OnClickListener {
             mFiltersContainer.setLayoutParams(params);
             for (final SearchFilter filter : filters) {
                 AppCompatCheckBox checkBox = new AppCompatCheckBox(mContext);
-                checkBox.setText(filter.getTitle());
-                checkBox.setTextSize(11);
-                checkBox.setTextColor(mTextColor);
-                checkBox.setChecked(filter.isChecked());
+
+                boolean isChecked = filter.isChecked();
+                mSearchFiltersStates.add(isChecked);
+                final int index = mSearchFiltersStates.size() - 1;
+
+                checkBox.setChecked(isChecked);
                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         filter.setChecked(b);
+                        mSearchFiltersStates.set(index, b);
                     }
                 });
-                mFiltersContainer.addView(checkBox);
+                checkBox.setText(filter.getTitle());
+                checkBox.setTextSize(11);
+                checkBox.setTextColor(mTextColor);
 
-                boolean isChecked = filter.isChecked();
-                mSearchFiltersStates.add(isChecked);
+                mFiltersContainer.addView(checkBox);
             }
         }
     }
@@ -674,12 +678,11 @@ public class SearchView extends FrameLayout implements View.OnClickListener {
     }
 
     public void setVoice(boolean voice) {
+        mVoice = voice;
         if (voice && isVoiceAvailable()) {
             mVoiceImageView.setVisibility(View.VISIBLE);
-            mVoice = voice;
         } else {
             mVoiceImageView.setVisibility(View.GONE);
-            mVoice = voice;
         }
     }
 
@@ -1270,11 +1273,11 @@ public class SearchView extends FrameLayout implements View.OnClickListener {
         boolean isSearchOpen;
         List<Boolean> searchFiltersStates = new ArrayList<>();
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 
-        public SavedState(Parcel source) {
+        SavedState(Parcel source) {
             super(source);
             this.version = source.readInt();
             this.query = source.readString();
